@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Webhook Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .message {
+            background-color: #f0f0f0;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Discord Webhook Data</h1>
+
+    <button id="fetchDataButton">Fetch Webhook Data</button>
+    <div id="dataContainer"></div>
+
+    <script>
+        document.getElementById('fetchDataButton').addEventListener('click', function() {
+            fetch('https://YOUR_FUNCTION_URL/get-webhook-data') // Serverless function endpoint
+                .then(response => response.json())
+                .then(data => {
+                    if (data.data) {
+                        const message = data.data.content || 'No message content';
+                        const messageElement = document.createElement('div');
+                        messageElement.classList.add('message');
+                        messageElement.textContent = `Message: ${message}`;
+                        document.getElementById('dataContainer').appendChild(messageElement);
+                    } else {
+                        alert('No data available');
+                    }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
+</body>
+</html>
