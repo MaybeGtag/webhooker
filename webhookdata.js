@@ -1,38 +1,20 @@
-// netlify/functions/get-webhook-data.js
+const fetch = require('node-fetch');
 
-let webhookData = null; // Temporary in-memory store
-
-// Handle POST request from Discord webhook
 exports.handler = async function(event, context) {
-    if (event.httpMethod === 'POST') {
-        // Save the incoming webhook data
-        webhookData = JSON.parse(event.body);
-        console.log('Received data:', webhookData);
-        
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ status: 'Webhook data received' }),
-        };
-    }
-    
-    // Handle GET request to send data to frontend
-    if (event.httpMethod === 'GET') {
-        if (webhookData) {
-            return {
-                statusCode: 200,
-                body: JSON.stringify({ data: webhookData }),
-            };
-        } else {
-            return {
-                statusCode: 404,
-                body: JSON.stringify({ error: 'No data available' }),
-            };
-        }
-    }
+    const webhookUrl = "https://discord.com/api/webhooks/1364080704060784690/l1EcOAdXyCH5rQrwC4AxOGbEMN876wov85KxA1wdlTQ279wN0ks2h6Phvk_YQaEf7Qn8";
 
-    // Default response for unsupported methods
+    const message = {
+        content: "Hello from Netlify!",
+    };
+
+    await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(message),
+    });
+
     return {
-        statusCode: 405,
-        body: JSON.stringify({ error: 'Method Not Allowed' }),
+        statusCode: 200,
+        body: JSON.stringify({ status: 'Message sent to Discord!' }),
     };
 };
